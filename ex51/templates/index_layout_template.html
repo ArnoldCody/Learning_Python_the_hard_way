@@ -1,0 +1,10 @@
+$def with (greeting)
+
+$if greeting:
+	I just wanted to say <em style="color: green; font-size: 2em;">$greeting</em>.
+	<a href="http://0.0.0.0:8080/upload">upload</a> 
+	<!--用来指向重新指向/upload-->
+	<a href="http://0.0.0.0:8080/hello">Try Again</a> 
+	<!--用来指向重新指向/hello-->
+$else:
+	<em>Hello</em>, world!
