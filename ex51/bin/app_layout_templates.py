@@ -1,5 +1,6 @@
 # coding:utf-8
 import web
+import datetime
 
 urls = (
 	'/hello', 'Index',
@@ -19,18 +20,32 @@ class Index(object):
 		greeting = "%s, %s" % (form.greet, form.name)
 		return render.index_layout_template(greeting = greeting)
 
+# 下面代码为上传图片并保存
 class Upload(object):
     def GET(self):
+    	web.header("Content-Type","text/html; charset=utf-8")
         return render.upload()
 
     def POST(self):
         x = web.input(myfile={})
-        web.debug(x['myfile'].filename) # 这里是文件名
-        web.debug(x['myfile'].value) # 这里是文件内容
-        web.debug(x['myfile'].file.read()) # 或者使用一个文件对象
-        raise web.seeother('/upload')
-
-
+        if 'myfile' in x:
+        	filepath=x.myfile.filename.replace('\\','/')#客户端为windows时注
+        	filename=filepath.split('/')[-1]#获取文件名
+        	ext = filename.split('.', 1)[1]#获取后缀
+        	if ext == 'jpg':#判断文件后缀名
+    			filedir = '/users/arnold/projects'#要上传的路径
+      			now = datetime.datetime.now() #获取时间
+    			t = "%d%d%d%d%d%d" %(now.year,now.month,now.day,now.hour,now.minute,now.second) #以时间作为文件名
+      			filename = t+'.'+ext #文件名+后缀
+       			fout = open(filedir +'/'+ filename,'w')
+       			fout.write(x.myfile.file.read())
+       			fout.close()
+       			message = u'OK！'
+       			error = False
+       		else:
+   	 			message = u'请上传jpg格式的文件！'
+   	 			error = True
+		
 				
     		
 if __name__ == "__main__":
